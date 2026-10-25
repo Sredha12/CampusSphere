@@ -1,0 +1,38 @@
+# =============================================================================
+# CampusSphere Configuration Template (Example)
+# =============================================================================
+# DO NOT store real passwords or secret keys in this committed template!
+#
+# SETUP INSTRUCTIONS:
+# 1. Create a directory named ".campussphere" inside your user profile folder:
+#    C:\Users\Sreddha\.campussphere
+# 2. Copy this file into that folder and rename it:
+#    C:\Users\Sreddha\.campussphere\campussphere.properties
+# 3. Open that local file and update the placeholder values below with your real
+#    database password and a secret setup key.
+#
+# NOTE: The file C:\Users\Sreddha\.campussphere\campussphere.properties is stored
+# safely outside the project directory and will NEVER be committed to Git.
+# =============================================================================
+
+# Database Host (default: localhost)
+db.host=localhost
+
+# Database Port (default: 3306)
+db.port=3306
+
+# Database Name (default: campussphere)
+db.name=campussphere
+
+# Database Application User (created via database/00-create-database-and-user.sql)
+db.user=campussphere_app
+
+# Database Password (replace placeholder in your local copy outside Git)
+db.password=PUT_YOUR_PASSWORD_HERE
+
+# Application Business Timezone (default: Asia/Kolkata)
+app.timezone=Asia/Kolkata
+
+# Initial One-Time Admin Setup Bootstrap Secret Key
+# (Required only when registering the first admin via /setup)
+setup.key=PUT_A_LONG_RANDOM_SETUP_KEY_HERE

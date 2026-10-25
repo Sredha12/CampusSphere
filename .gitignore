@@ -1,0 +1,38 @@
+# =============================================================================
+# CampusSphere Git Ignore Rules
+# =============================================================================
+
+# Build outputs
+target/
+*.war
+*.class
+*.jar
+
+# Logs
+*.log
+
+# IDE & Editor metadata
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables & secrets
+.env
+.env.*
+
+# Local uncommitted database working scripts
+database/local/
+
+# Local properties files (keep example templates)
+config/*.properties
+!config/*.properties.example
+
+# Preserve template files
+!*.template

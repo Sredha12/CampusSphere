@@ -1,0 +1,28 @@
+-- =============================================================================
+-- CampusSphere: Database and Application User Setup Template
+-- =============================================================================
+-- INSTRUCTIONS FOR LOCAL EXECUTION:
+-- 1. Copy this template file into a local folder:
+--    database/local/00-create-database-and-user.sql
+--    (The folder 'database/local/' is git-ignored to prevent credential leaks).
+-- 2. Open that local copy and replace 'CHANGE_ME_BEFORE_RUNNING' with your
+--    desired strong password for the application user.
+-- 3. Run the edited file using MySQL CLI as root:
+--    & "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe" -u root -p -e "source database/local/00-create-database-and-user.sql"
+-- 4. NEVER commit the edited file containing real passwords to Git!
+-- =============================================================================
+
+-- Create the application database
+CREATE DATABASE IF NOT EXISTS campussphere
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+-- Create the dedicated least-privilege application user
+CREATE USER IF NOT EXISTS 'campussphere_app'@'localhost' 
+    IDENTIFIED BY 'CHANGE_ME_BEFORE_RUNNING';
+
+-- Grant ONLY data manipulation privileges (no DROP, CREATE, ALTER, or GRANT privileges)
+GRANT SELECT, INSERT, UPDATE, DELETE ON campussphere.* TO 'campussphere_app'@'localhost';
+
+-- Apply privilege changes
+FLUSH PRIVILEGES;
