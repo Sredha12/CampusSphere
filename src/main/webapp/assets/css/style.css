@@ -1176,6 +1176,379 @@ a:hover {
 }
 
 /* -----------------------------------------------------------------------------
+ * Phase 5: Flash Alerts & Notification Banners
+ * ----------------------------------------------------------------------------- */
+.alert {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-6);
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.alert-success {
+    background-color: var(--color-status-open-bg);
+    color: var(--color-status-open-text);
+    border: 1px solid var(--color-status-open-border);
+}
+
+.alert-error {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.alert-icon {
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.alert-text {
+    flex: 1;
+}
+
+/* -----------------------------------------------------------------------------
+ * Phase 5: Authentication Pages & Forms
+ * ----------------------------------------------------------------------------- */
+.auth-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-6) 0;
+}
+
+.auth-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    max-width: 520px;
+    padding: var(--space-8);
+}
+
+.admin-auth-card {
+    border-top: 4px solid var(--color-primary-dark);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+}
+
+.auth-icon {
+    font-size: 2.75rem;
+    display: inline-block;
+    margin-bottom: var(--space-2);
+}
+
+.auth-title {
+    font-size: 1.75rem;
+    margin-bottom: var(--space-1);
+}
+
+.auth-subtitle {
+    color: var(--color-text-subtle);
+    font-size: 0.925rem;
+}
+
+.auth-alert {
+    margin-bottom: var(--space-5);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+    color: var(--color-text-main);
+}
+
+.required-indicator {
+    color: #dc2626;
+    margin-left: 0.15rem;
+}
+
+.field-help {
+    font-size: 0.775rem;
+    color: var(--color-text-subtle);
+    margin-top: 0.25rem;
+}
+
+.field-error {
+    color: #b91c1c;
+    font-size: 0.825rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-control.is-invalid {
+    border-color: #dc2626;
+    background-color: #fffbfb;
+}
+
+.form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+.form-control-readonly {
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.form-row {
+    display: flex;
+    gap: var(--space-4);
+}
+
+.form-col {
+    flex: 1;
+}
+
+.form-col-1 {
+    flex: 1;
+}
+
+.form-col-2 {
+    flex: 2;
+}
+
+.auth-submit-btn {
+    margin-top: var(--space-2);
+}
+
+.auth-footer-links {
+    margin-top: var(--space-6);
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-text-subtle);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
+}
+
+/* -----------------------------------------------------------------------------
+ * Phase 5: Authenticated Navigation & User State
+ * ----------------------------------------------------------------------------- */
+.nav-user-greeting {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    padding: var(--space-1) var(--space-3);
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+}
+
+.user-avatar-badge {
+    font-size: 0.95rem;
+}
+
+.admin-avatar-badge {
+    font-size: 0.95rem;
+}
+
+.role-badge {
+    font-size: 0.75rem;
+    color: var(--color-primary-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.nav-logout-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.nav-logout-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-text-subtle);
+    font-weight: 600;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+}
+
+.nav-logout-btn:hover {
+    color: #dc2626;
+    background-color: #fef2f2;
+}
+
+/* -----------------------------------------------------------------------------
+ * Phase 5: Dashboards & Profile Layouts
+ * ----------------------------------------------------------------------------- */
+.dashboard-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.dashboard-header-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-dashboard-header {
+    border-top: 4px solid var(--color-primary-dark);
+}
+
+.dashboard-title {
+    font-size: 2rem;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-1);
+}
+
+.dashboard-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-subtle);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-6);
+}
+
+.dash-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dash-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.dash-card-icon {
+    font-size: 2.25rem;
+    line-height: 1;
+}
+
+.dash-card-title {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.dash-card-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    flex-grow: 1;
+    line-height: 1.5;
+}
+
+.info-notice-card {
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-6);
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+}
+
+.admin-notice-card {
+    border-left-color: var(--color-primary-dark);
+}
+
+.notice-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.notice-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: var(--space-1);
+}
+
+.notice-text {
+    font-size: 0.925rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+.admin-phase-list {
+    margin: var(--space-2) 0 var(--space-3) var(--space-5);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+.profile-layout {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    width: 100%;
+    max-width: 650px;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+
+    .auth-card,
+    .profile-card {
+        padding: var(--space-6) var(--space-4);
+    }
+}
+
+/* -----------------------------------------------------------------------------
  * Accessibility: Prefers-Reduced-Motion
  * ----------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {

@@ -109,15 +109,24 @@
 
             <hr class="sidebar-divider">
 
-            <!-- Honest Call to Action block (Registration arrives in Phase 5) -->
+            <!-- Honest Call to Action block (Registration arrives in Phase 7) -->
             <div class="cta-box">
                 <h4>Event Registration</h4>
                 <p class="cta-notice">
-                    Register with your student account (login arrives in the next build phase).
+                    Sign in with your student account to register for events when registrations open (Phase 7).
                 </p>
-                <a href="${pageContext.request.contextPath}/login" class="btn btn-primary btn-block">
-                    Sign In with Student Account
-                </a>
+                <c:choose>
+                    <c:when test="${sessionScope.userRole eq 'STUDENT'}">
+                        <a href="${pageContext.request.contextPath}/student/dashboard" class="btn btn-primary btn-block">
+                            Go to Student Dashboard
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/login" class="btn btn-primary btn-block">
+                            Sign In with Student Account
+                        </a>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 

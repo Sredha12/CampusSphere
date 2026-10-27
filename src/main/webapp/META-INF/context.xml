@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Tomcat Context Configuration for CampusSphere.
+  Configures CookieProcessor to enforce SameSite=Lax on session cookies (JSESSIONID).
+  NOTE: The 'secure' flag is not set here because local development runs over HTTP.
+  In a production HTTPS deployment, ensure secure="true" is configured.
+-->
+<Context>
+    <CookieProcessor sameSiteCookies="lax" />
+</Context>

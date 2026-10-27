@@ -11,6 +11,50 @@
     <request-character-encoding>UTF-8</request-character-encoding>
     <response-character-encoding>UTF-8</response-character-encoding>
 
+    <!-- ===================================================================== -->
+    <!-- Security Filter Chain (Explicit Execution Order)                      -->
+    <!-- 1. SecurityHeadersFilter: Applies X-Content-Type, X-Frame, Referrer   -->
+    <!-- 2. CsrfFilter: Enforces CSRF token check on all POST operations       -->
+    <!-- 3. AuthFilter: Restricts /student/* to authenticated student sessions -->
+    <!-- 4. AdminFilter: Restricts /admin/* to authenticated admin sessions    -->
+    <!-- ===================================================================== -->
+
+    <filter>
+        <filter-name>SecurityHeadersFilter</filter-name>
+        <filter-class>com.campussphere.filter.SecurityHeadersFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SecurityHeadersFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>CsrfFilter</filter-name>
+        <filter-class>com.campussphere.filter.CsrfFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CsrfFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.campussphere.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/student/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>com.campussphere.filter.AdminFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
     <!-- Session Management Configuration -->
     <session-config>
         <session-timeout>30</session-timeout>
@@ -21,6 +65,11 @@
     </session-config>
 
     <!-- Error Page Handlers -->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/views/error/403.jsp</location>
+    </error-page>
+
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/views/error/404.jsp</location>
