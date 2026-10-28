@@ -159,6 +159,27 @@ public class StudentDAO {
         }
     }
 
+    /**
+     * Counts the total number of student accounts in the database.
+     *
+     * @return count of student rows
+     */
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM students";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Database error counting students", e);
+            throw new DataAccessException("Failed to count student accounts", e);
+        }
+    }
+
     private Student mapStudent(ResultSet rs) throws SQLException {
         Student s = new Student();
         s.setId(rs.getInt("id"));

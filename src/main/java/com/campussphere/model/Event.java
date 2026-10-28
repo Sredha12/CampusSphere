@@ -144,7 +144,7 @@ public class Event implements Serializable {
      */
     public String getSafeImageUrl() {
         if (imageUrl != null && (imageUrl.startsWith("/") || imageUrl.startsWith("assets/"))) {
-            return imageUrl;
+            return imageUrl.startsWith("/") ? imageUrl : "/" + imageUrl;
         }
         return null;
     }

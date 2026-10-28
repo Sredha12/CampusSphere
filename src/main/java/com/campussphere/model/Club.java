@@ -72,7 +72,7 @@ public class Club implements Serializable {
      */
     public String getSafeImageUrl() {
         if (imageUrl != null && (imageUrl.startsWith("/") || imageUrl.startsWith("assets/"))) {
-            return imageUrl;
+            return imageUrl.startsWith("/") ? imageUrl : "/" + imageUrl;
         }
         return null;
     }
@@ -83,5 +83,15 @@ public class Club implements Serializable {
 
     public void setUpcomingEventCount(int upcomingEventCount) {
         this.upcomingEventCount = upcomingEventCount;
+    }
+
+    private int totalEventCount;
+
+    public int getTotalEventCount() {
+        return totalEventCount;
+    }
+
+    public void setTotalEventCount(int totalEventCount) {
+        this.totalEventCount = totalEventCount;
     }
 }

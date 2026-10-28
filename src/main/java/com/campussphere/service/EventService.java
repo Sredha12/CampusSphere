@@ -7,6 +7,7 @@ import com.campussphere.model.Event;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -96,12 +97,15 @@ public class EventService {
         }
 
         // 2. Check if event has ended
-        if (event.getEventDate() != null && event.getStartTime() != null) {
-            ZonedDateTime eventStart = LocalDateTime.of(event.getEventDate(), event.getStartTime()).atZone(zoneId);
-            if (now.isAfter(eventStart)) {
-                event.setAvailability(AvailabilityStatus.ENDED);
-                event.setAvailabilityLabel("Event Ended");
-                return;
+        if (event.getEventDate() != null) {
+            LocalTime finishTime = event.getEndTime() != null ? event.getEndTime() : event.getStartTime();
+            if (finishTime != null) {
+                ZonedDateTime eventEnd = LocalDateTime.of(event.getEventDate(), finishTime).atZone(zoneId);
+                if (now.isAfter(eventEnd)) {
+                    event.setAvailability(AvailabilityStatus.ENDED);
+                    event.setAvailabilityLabel("Event Ended");
+                    return;
+                }
             }
         }
 
@@ -125,5 +129,57 @@ public class EventService {
         // 5. Default to Open
         event.setAvailability(AvailabilityStatus.OPEN);
         event.setAvailabilityLabel("Open for Registration");
+    }
+
+    /**
+     * Retrieves all events sorted by date descending for admin management,
+     * enriched with availability status.
+     */
+    public List<Event> getAllEventsForAdmin() {
+        List<Event> events = eventDAO.findAllSortedByDateDesc();
+        events.forEach(this::enrichEventStatus);
+        return events;
+    }
+
+    /**
+     * Returns total events count in the database.
+     */
+    public int getTotalEventCount() {
+        return eventDAO.countAll();
+    }
+
+    /**
+     * Returns count of events starting after now in the application timezone.
+     */
+    public int getUpcomingEventCount() {
+        return eventDAO.countUpcoming(AppConfig.getInstance().getZoneId());
+    }
+
+    /**
+     * Returns total registrations count for an event.
+     */
+    public int getRegistrationCountForEvent(int eventId) {
+        return eventDAO.countRegistrationsByEventId(eventId);
+    }
+
+    /**
+     * Creates a new event.
+     */
+    public int createEvent(Event event) {
+        return eventDAO.create(event);
+    }
+
+    /**
+     * Updates an existing event.
+     */
+    public boolean updateEvent(Event event) {
+        return eventDAO.update(event);
+    }
+
+    /**
+     * Deletes an event. Registrations are removed by DB cascade.
+     */
+    public boolean deleteEvent(int eventId) {
+        return eventDAO.delete(eventId);
     }
 }

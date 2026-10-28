@@ -1,5 +1,13 @@
 package com.campussphere.util;
 
+import com.campussphere.config.AppConfig;
+import com.campussphere.dao.ClubDAO;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -180,5 +188,183 @@ public final class ValidationUtil {
         if (!PHONE_PATTERN.matcher(cleaned).matches()) {
             errors.put("phone", "Phone number must contain 10 to 15 digits (optional leading +).");
         }
+    }
+
+    /**
+     * Validates an optional local image URL.
+     */
+    public static void validateImageUrl(String imageUrl, Map<String, String> errors) {
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            return; // Optional
+        }
+        String trimmed = imageUrl.trim();
+        if (trimmed.length() > 255) {
+            errors.put("imageUrl", "Image path cannot exceed 255 characters.");
+            return;
+        }
+        if (!trimmed.startsWith("assets/") && !trimmed.startsWith("/")) {
+            errors.put("imageUrl", "Image URL must be a local path starting with 'assets/' or '/'.");
+            return;
+        }
+        if (trimmed.contains("..") || trimmed.contains("://") || trimmed.toLowerCase().contains("javascript:")
+                || trimmed.matches(".*\\s+.*")) {
+            errors.put("imageUrl", "Image path contains invalid characters, whitespace, or external URL protocols.");
+        }
+    }
+
+    /**
+     * Validates club fields for creation and updates.
+     */
+    public static Map<String, String> validateClub(
+            String name, String description, String contactEmail, String imageUrl,
+            Integer excludeClubId, ClubDAO clubDAO) {
+
+        Map<String, String> errors = new LinkedHashMap<>();
+
+        if (name == null || name.trim().isEmpty()) {
+            errors.put("name", "Club name is required.");
+        } else {
+            String trimmed = name.trim();
+            if (trimmed.length() > 100) {
+                errors.put("name", "Club name cannot exceed 100 characters.");
+            } else if (clubDAO != null && clubDAO.existsByName(trimmed, excludeClubId)) {
+                errors.put("name", "A club with this name already exists. Please choose a unique name.");
+            }
+        }
+
+        if (description == null || description.trim().isEmpty()) {
+            errors.put("description", "Club description is required.");
+        } else if (description.trim().length() > 2000) {
+            errors.put("description", "Club description cannot exceed 2000 characters.");
+        }
+
+        if (contactEmail != null && !contactEmail.trim().isEmpty()) {
+            String trimmedEmail = contactEmail.trim();
+            if (trimmedEmail.length() > 150) {
+                errors.put("contactEmail", "Contact email cannot exceed 150 characters.");
+            } else if (!EMAIL_PATTERN.matcher(trimmedEmail).matches()) {
+                errors.put("contactEmail", "Please provide a valid email address (e.g. club@example.com).");
+            }
+        }
+
+        validateImageUrl(imageUrl, errors);
+
+        return errors;
+    }
+
+    /**
+     * Validates event fields for creation and updates.
+     */
+    public static Map<String, String> validateEvent(
+            Integer clubId, String title, String description, String category, String venue,
+            String eventDateStr, String startTimeStr, String endTimeStr, String deadlineStr,
+            String capacityStr, String imageUrl, Integer currentRegisteredCount, ClubDAO clubDAO) {
+
+        Map<String, String> errors = new LinkedHashMap<>();
+
+        if (clubId == null || clubId <= 0 || (clubDAO != null && clubDAO.findById(clubId) == null)) {
+            errors.put("clubId", "Please select a valid hosting club.");
+        }
+
+        if (title == null || title.trim().isEmpty()) {
+            errors.put("title", "Event title is required.");
+        } else if (title.trim().length() > 150) {
+            errors.put("title", "Event title cannot exceed 150 characters.");
+        }
+
+        if (description == null || description.trim().isEmpty()) {
+            errors.put("description", "Event description is required.");
+        } else if (description.trim().length() > 4000) {
+            errors.put("description", "Event description cannot exceed 4000 characters.");
+        }
+
+        if (category == null || category.trim().isEmpty()) {
+            errors.put("category", "Event category is required.");
+        } else if (category.trim().length() > 50) {
+            errors.put("category", "Event category cannot exceed 50 characters.");
+        }
+
+        if (venue == null || venue.trim().isEmpty()) {
+            errors.put("venue", "Event venue is required.");
+        } else if (venue.trim().length() > 150) {
+            errors.put("venue", "Event venue cannot exceed 150 characters.");
+        }
+
+        LocalDate eventDate = null;
+        if (eventDateStr == null || eventDateStr.trim().isEmpty()) {
+            errors.put("eventDate", "Event date is required.");
+        } else {
+            try {
+                eventDate = LocalDate.parse(eventDateStr.trim());
+            } catch (DateTimeParseException e) {
+                errors.put("eventDate", "Event date must be a valid date (YYYY-MM-DD).");
+            }
+        }
+
+        LocalTime startTime = null;
+        if (startTimeStr == null || startTimeStr.trim().isEmpty()) {
+            errors.put("startTime", "Start time is required.");
+        } else {
+            try {
+                startTime = LocalTime.parse(startTimeStr.trim());
+            } catch (DateTimeParseException e) {
+                errors.put("startTime", "Start time must be a valid time (HH:MM).");
+            }
+        }
+
+        LocalTime endTime = null;
+        if (endTimeStr == null || endTimeStr.trim().isEmpty()) {
+            errors.put("endTime", "End time is required.");
+        } else {
+            try {
+                endTime = LocalTime.parse(endTimeStr.trim());
+            } catch (DateTimeParseException e) {
+                errors.put("endTime", "End time must be a valid time (HH:MM).");
+            }
+        }
+
+        if (startTime != null && endTime != null) {
+            if (!endTime.isAfter(startTime)) {
+                errors.put("endTime", "End time must be after the start time.");
+            }
+        }
+
+        LocalDateTime deadline = null;
+        if (deadlineStr == null || deadlineStr.trim().isEmpty()) {
+            errors.put("registrationDeadline", "Registration deadline is required.");
+        } else {
+            try {
+                deadline = LocalDateTime.parse(deadlineStr.trim());
+            } catch (DateTimeParseException e) {
+                errors.put("registrationDeadline", "Registration deadline must be a valid date and time.");
+            }
+        }
+
+        if (eventDate != null && startTime != null && deadline != null) {
+            LocalDateTime eventStart = LocalDateTime.of(eventDate, startTime);
+            if (deadline.isAfter(eventStart)) {
+                errors.put("registrationDeadline", "Registration deadline cannot be after the event start time.");
+            }
+        }
+
+        if (capacityStr != null && !capacityStr.trim().isEmpty()) {
+            try {
+                int capacity = Integer.parseInt(capacityStr.trim());
+                if (capacity <= 0) {
+                    errors.put("capacity", "Capacity must be greater than zero, or leave empty for unlimited.");
+                } else if (capacity > 100000) {
+                    errors.put("capacity", "Capacity cannot exceed 100,000 attendees.");
+                } else if (currentRegisteredCount != null && capacity < currentRegisteredCount) {
+                    errors.put("capacity", "Capacity cannot be less than the current number of registered attendees (" +
+                            currentRegisteredCount + ").");
+                }
+            } catch (NumberFormatException e) {
+                errors.put("capacity", "Capacity must be a valid integer number.");
+            }
+        }
+
+        validateImageUrl(imageUrl, errors);
+
+        return errors;
     }
 }

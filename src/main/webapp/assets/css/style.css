@@ -1543,8 +1543,504 @@ a:hover {
     }
 
     .auth-card,
-    .profile-card {
+    .profile-card,
+    .admin-form-card,
+    .admin-confirm-card {
         padding: var(--space-6) var(--space-4);
+    }
+
+    .form-col-3 {
+        width: 100%;
+    }
+}
+
+/* -----------------------------------------------------------------------------
+ * Phase 6: Admin Management Interface Styles (Restrained, High-Contrast)
+ * ----------------------------------------------------------------------------- */
+.admin-page-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.admin-subnav {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-subnav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.admin-subnav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-subnav-link:hover {
+    color: var(--color-primary);
+    background-color: var(--color-primary-subtle);
+}
+
+.admin-subnav-link.active {
+    color: var(--color-primary-dark);
+    background-color: var(--color-primary-subtle);
+    font-weight: 700;
+}
+
+.admin-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.admin-header-actions {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.admin-table-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.925rem;
+}
+
+.admin-table th {
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+    background-color: var(--color-surface-alt);
+}
+
+.club-table-info,
+.event-table-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.table-item-link {
+    color: var(--color-text-main);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.table-item-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.table-submeta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.85rem;
+}
+
+.table-datetime-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.table-email-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.table-email-link:hover {
+    text-decoration: underline;
+}
+
+.action-btn-group {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+    color: #ffffff;
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: var(--color-text-subtle); }
+
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.admin-form-card,
+.admin-confirm-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-sm);
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.form-card-header,
+.confirm-card-header {
+    margin-bottom: var(--space-6);
+}
+
+.form-card-title,
+.confirm-card-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: var(--space-2) 0;
+}
+
+.form-card-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+.admin-crud-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.form-textarea {
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.form-col-3 {
+    flex: 1 1 calc(33.333% - var(--space-3));
+    min-width: 140px;
+}
+
+.confirm-details-box {
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.confirm-entity-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+}
+
+.confirm-meta {
+    font-size: 0.925rem;
+    color: var(--color-text-main);
+}
+
+.confirm-actions {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.dash-card-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    flex-wrap: wrap;
+}
+
+/* -----------------------------------------------------------------------------
+ * Phase 7: Event Registration Status & Controls
+ * ----------------------------------------------------------------------------- */
+.registered-status-box {
+    background-color: var(--color-status-open-bg);
+    border: 1px solid var(--color-status-open-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+}
+
+.registered-status-text {
+    font-size: 0.9rem;
+    color: var(--color-status-open-text);
+    font-weight: 600;
+    margin: 0;
+}
+
+.admin-notice-inline {
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+/* -----------------------------------------------------------------------------
+ * Phase 8: Dashboard Statistics & Attendee Roster Styles
+ * ----------------------------------------------------------------------------- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+}
+
+.stat-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary-border);
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-card-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-text-main);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-subtle);
+}
+
+/* Registration Status Badges */
+.badge-registered {
+    background-color: var(--color-status-open-bg);
+    color: var(--color-status-open-text);
+    border-color: var(--color-status-open-border);
+}
+
+.badge-cancelled {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.status-dot-registered {
+    background-color: var(--color-status-open-dot);
+}
+
+.status-dot-cancelled {
+    background-color: #ef4444;
+}
+
+/* Event Roster Summary Card */
+.roster-summary-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-sm);
+}
+
+.roster-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+}
+
+.roster-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.roster-detail-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+}
+
+.roster-detail-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+/* -----------------------------------------------------------------------------
+ * Printable Attendee Roster Styles
+ * ----------------------------------------------------------------------------- */
+@media print {
+    header,
+    footer,
+    .site-header,
+    .site-footer,
+    .admin-subnav,
+    .breadcrumbs,
+    .admin-header-actions,
+    .btn,
+    .skip-link,
+    .action-btn-group,
+    .filter-section {
+        display: none !important;
+    }
+
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-family: serif !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .admin-page-container,
+    .dashboard-wrapper {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .roster-summary-card,
+    .admin-table-card {
+        border: 1px solid #000000 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background: #ffffff !important;
+        margin-bottom: 12pt !important;
+        padding: 8pt !important;
+    }
+
+    .admin-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 10pt !important;
+    }
+
+    .admin-table th {
+        background-color: #f0f0f0 !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
+        padding: 6pt !important;
+        font-weight: bold !important;
+    }
+
+    .admin-table td {
+        border: 1px solid #cccccc !important;
+        color: #000000 !important;
+        padding: 5pt 6pt !important;
+    }
+
+    .admin-table tbody tr:hover {
+        background-color: transparent !important;
+    }
+
+    .badge {
+        border: 1px solid #000000 !important;
+        color: #000000 !important;
+        background: transparent !important;
     }
 }
 

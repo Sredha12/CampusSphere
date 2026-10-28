@@ -55,7 +55,11 @@
                     <c:when test="${sessionScope.userRole eq 'ADMIN'}">
                         <a href="${pageContext.request.contextPath}/admin/dashboard" 
                            class="nav-link ${activeNav eq 'adminDashboard' ? 'active' : ''}" 
-                           ${activeNav eq 'adminDashboard' ? 'aria-current="page"' : ''}>Admin Portal</a>
+                           ${activeNav eq 'adminDashboard' ? 'aria-current="page"' : ''}>Dashboard</a>
+                        <a href="${pageContext.request.contextPath}/admin/clubs" 
+                           class="nav-link ${adminActiveNav eq 'clubs' || adminActiveNav eq 'clubs-new' ? 'active' : ''}">Clubs</a>
+                        <a href="${pageContext.request.contextPath}/admin/events" 
+                           class="nav-link ${adminActiveNav eq 'events' || adminActiveNav eq 'events-new' ? 'active' : ''}">Events</a>
                         <span class="nav-user-greeting" aria-label="Signed in as Administrator <c:out value="${sessionScope.userName}"/>">
                             <span class="user-avatar-badge admin-avatar-badge" aria-hidden="true">🛡️</span>
                             <span class="user-name"><c:out value="${sessionScope.userName}"/> <small class="role-badge">(Admin)</small></span>

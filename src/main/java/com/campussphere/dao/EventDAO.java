@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -180,6 +181,218 @@ public class EventDAO {
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error querying event categories", e);
             throw new DataAccessException("Failed to load event categories", e);
+        }
+    }
+
+    /**
+     * Retrieves all events sorted by event_date DESC, start_time DESC for administrative management.
+     */
+    public List<Event> findAllSortedByDateDesc() {
+        String sql = BASE_SELECT + "ORDER BY e.event_date DESC, e.start_time DESC";
+
+        List<Event> events = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                events.add(mapEvent(rs));
+            }
+            return events;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error querying all events for admin", e);
+            throw new DataAccessException("Failed to load events for administration", e);
+        }
+    }
+
+    /**
+     * Counts all registrations for an event.
+     */
+    public int countRegistrationsByEventId(int eventId) {
+        String sql = "SELECT COUNT(*) FROM event_registrations WHERE event_id = ? AND status = 'REGISTERED'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, eventId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+                return 0;
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error counting registrations for eventId=" + eventId, e);
+            throw new DataAccessException("Failed to count registrations for event", e);
+        }
+    }
+
+    /**
+     * Counts the total number of events in the database.
+     *
+     * @return total events count
+     */
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM events";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error counting total events", e);
+            throw new DataAccessException("Failed to count events", e);
+        }
+    }
+
+    /**
+     * Counts events starting strictly after the current moment in the specified application timezone.
+     * An event is upcoming if its event_date is after today, or if event_date is today and start_time is after now.
+     *
+     * @param zoneId application timezone
+     * @return upcoming events count
+     */
+    public int countUpcoming(ZoneId zoneId) {
+        java.time.ZonedDateTime now = java.time.ZonedDateTime.now(zoneId != null ? zoneId : java.time.ZoneId.of("Asia/Kolkata"));
+        LocalDate today = now.toLocalDate();
+        LocalTime currentTime = now.toLocalTime();
+
+        String sql = "SELECT COUNT(*) FROM events WHERE event_date > ? OR (event_date = ? AND start_time > ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setDate(1, Date.valueOf(today));
+            stmt.setDate(2, Date.valueOf(today));
+            stmt.setTime(3, java.sql.Time.valueOf(currentTime));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+                return 0;
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error counting upcoming events", e);
+            throw new DataAccessException("Failed to count upcoming events", e);
+        }
+    }
+
+    /**
+     * Inserts a new event.
+     *
+     * @param event the event to insert
+     * @return generated ID
+     */
+    public int create(Event event) {
+        String sql = "INSERT INTO events (club_id, title, description, category, venue, " +
+                "event_date, start_time, end_time, registration_deadline, capacity, image_url) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, event.getClubId());
+            stmt.setString(2, event.getTitle().trim());
+            stmt.setString(3, event.getDescription().trim());
+            stmt.setString(4, event.getCategory().trim());
+            stmt.setString(5, event.getVenue().trim());
+            stmt.setDate(6, Date.valueOf(event.getEventDate()));
+            stmt.setTime(7, java.sql.Time.valueOf(event.getStartTime()));
+            stmt.setTime(8, java.sql.Time.valueOf(event.getEndTime()));
+            stmt.setTimestamp(9, java.sql.Timestamp.valueOf(event.getRegistrationDeadline()));
+
+            if (event.getCapacity() != null) {
+                stmt.setInt(10, event.getCapacity());
+            } else {
+                stmt.setNull(10, java.sql.Types.INTEGER);
+            }
+
+            if (event.getImageUrl() != null && !event.getImageUrl().isBlank()) {
+                stmt.setString(11, event.getImageUrl().trim());
+            } else {
+                stmt.setNull(11, java.sql.Types.VARCHAR);
+            }
+
+            stmt.executeUpdate();
+
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    int id = keys.getInt(1);
+                    event.setId(id);
+                    return id;
+                }
+            }
+            throw new DataAccessException("Failed to retrieve generated ID for event");
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error inserting event", e);
+            throw new DataAccessException("Failed to create event", e);
+        }
+    }
+
+    /**
+     * Updates an existing event.
+     *
+     * @param event the updated event entity
+     * @return true if updated
+     */
+    public boolean update(Event event) {
+        String sql = "UPDATE events SET club_id = ?, title = ?, description = ?, category = ?, venue = ?, " +
+                "event_date = ?, start_time = ?, end_time = ?, registration_deadline = ?, capacity = ?, image_url = ? " +
+                "WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, event.getClubId());
+            stmt.setString(2, event.getTitle().trim());
+            stmt.setString(3, event.getDescription().trim());
+            stmt.setString(4, event.getCategory().trim());
+            stmt.setString(5, event.getVenue().trim());
+            stmt.setDate(6, Date.valueOf(event.getEventDate()));
+            stmt.setTime(7, java.sql.Time.valueOf(event.getStartTime()));
+            stmt.setTime(8, java.sql.Time.valueOf(event.getEndTime()));
+            stmt.setTimestamp(9, java.sql.Timestamp.valueOf(event.getRegistrationDeadline()));
+
+            if (event.getCapacity() != null) {
+                stmt.setInt(10, event.getCapacity());
+            } else {
+                stmt.setNull(10, java.sql.Types.INTEGER);
+            }
+
+            if (event.getImageUrl() != null && !event.getImageUrl().isBlank()) {
+                stmt.setString(11, event.getImageUrl().trim());
+            } else {
+                stmt.setNull(11, java.sql.Types.VARCHAR);
+            }
+
+            stmt.setInt(12, event.getId());
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error updating event id=" + event.getId(), e);
+            throw new DataAccessException("Failed to update event", e);
+        }
+    }
+
+    /**
+     * Deletes an event by its ID. Cascade deletes registrations at the database level.
+     *
+     * @param id event ID
+     * @return true if deleted
+     */
+    public boolean delete(int id) {
+        String sql = "DELETE FROM events WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error deleting event id=" + id, e);
+            throw new DataAccessException("Failed to delete event", e);
         }
     }
 

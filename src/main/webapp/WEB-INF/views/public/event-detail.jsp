@@ -109,19 +109,60 @@
 
             <hr class="sidebar-divider">
 
-            <!-- Honest Call to Action block (Registration arrives in Phase 7) -->
+            <!-- Dynamic Call to Action: Registration & Cancellation -->
             <div class="cta-box">
                 <h4>Event Registration</h4>
-                <p class="cta-notice">
-                    Sign in with your student account to register for events when registrations open (Phase 7).
-                </p>
                 <c:choose>
+                    <c:when test="${isRegistered}">
+                        <div class="registered-status-box">
+                            <span class="badge badge-status badge-open">
+                                <span class="status-dot status-dot-open" aria-hidden="true"></span>
+                                You Are Registered
+                            </span>
+                            <p class="registered-status-text">
+                                You hold an active seat reservation for this event.
+                            </p>
+                            <a href="${pageContext.request.contextPath}/student/events/cancel-confirm?id=${event.id}" class="btn btn-sm btn-secondary btn-block">
+                                Cancel Registration
+                            </a>
+                        </div>
+                    </c:when>
                     <c:when test="${sessionScope.userRole eq 'STUDENT'}">
-                        <a href="${pageContext.request.contextPath}/student/dashboard" class="btn btn-primary btn-block">
-                            Go to Student Dashboard
-                        </a>
+                        <c:choose>
+                            <c:when test="${event.availability eq 'OPEN'}">
+                                <p class="cta-notice">
+                                    Reserve your seat now. Registration is free for college students.
+                                </p>
+                                <form action="${pageContext.request.contextPath}/student/events/register" method="POST">
+                                    <input type="hidden" name="_csrf" value="${csrfToken}"/>
+                                    <input type="hidden" name="eventId" value="${event.id}"/>
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        Register for Event
+                                    </button>
+                                </form>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="cta-notice">
+                                    Registrations are currently unavailable for this event.
+                                </p>
+                                <button type="button" class="btn btn-secondary btn-block" disabled>
+                                    <c:out value="${event.availabilityLabel}"/>
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:when>
+                    <c:when test="${sessionScope.userRole eq 'ADMIN'}">
+                        <div class="admin-notice-inline">
+                            <p class="cta-notice">Logged in as Administrator (student registration only).</p>
+                            <a href="${pageContext.request.contextPath}/admin/events" class="btn btn-secondary btn-block">
+                                Manage Events
+                            </a>
+                        </div>
                     </c:when>
                     <c:otherwise>
+                        <p class="cta-notice">
+                            Sign in with your student account to register for this event.
+                        </p>
                         <a href="${pageContext.request.contextPath}/login" class="btn btn-primary btn-block">
                             Sign In with Student Account
                         </a>

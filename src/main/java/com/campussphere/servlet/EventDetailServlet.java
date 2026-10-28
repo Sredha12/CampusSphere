@@ -2,6 +2,9 @@ package com.campussphere.servlet;
 
 import com.campussphere.model.Event;
 import com.campussphere.service.EventService;
+import com.campussphere.service.RegistrationService;
+import com.campussphere.util.CsrfUtil;
+import com.campussphere.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,6 +25,7 @@ public class EventDetailServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(EventDetailServlet.class.getName());
 
     private final EventService eventService = new EventService();
+    private final RegistrationService registrationService = new RegistrationService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,9 +52,19 @@ public class EventDetailServlet extends HttpServlet {
                 return;
             }
 
+            boolean isRegistered = false;
+            if (SessionUtil.isStudent(request)) {
+                Integer studentId = SessionUtil.getUserId(request);
+                if (studentId != null) {
+                    isRegistered = registrationService.isStudentRegistered(studentId, eventId);
+                }
+            }
+
             request.setAttribute("event", event);
+            request.setAttribute("isRegistered", isRegistered);
             request.setAttribute("activeNav", "events");
             request.setAttribute("pageTitle", event.getTitle() + " - CampusSphere");
+            CsrfUtil.exposeToken(request);
 
             request.getRequestDispatcher("/WEB-INF/views/public/event-detail.jsp").forward(request, response);
         } catch (Exception e) {
