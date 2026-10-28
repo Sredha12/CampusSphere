@@ -354,4 +354,8 @@ A successful build will generate `target/campussphere.war`.
 ## 10. Project Information
 
 - **Academic Group**: Group No. 10
-- **Team members**: (to be filled)
+- **Team members**: AKSA MARIAM NINAN-PTA25CS015
+                  : ASWIN S RAJAPPAN-PTA25CS041
+                  : N RAMYA-PTA25CS087
+                  : SREDHA MANOJ-PTA25CS106
+                  : UTHRAJA J-PTA25CS114
