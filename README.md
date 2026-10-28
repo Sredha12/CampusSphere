@@ -344,7 +344,7 @@ A successful build will generate `target/campussphere.war`.
 
 - **No Password Reset**: There is currently no self-service password reset or "Forgot Password" workflow. Account changes require direct administrator intervention.
 - **No Payment Gateway**: All campus events are free of charge. Paid ticketing and payment gateway integration are not supported.
-- **Public Diagnostic Endpoint**: The `/health` endpoint is publicly visible for local setup verification and should be secured or removed prior to production deployment.
+- **Public Diagnostic Endpoint**: The `/health` debug endpoint was removed.
 - **Mobile & Accessibility Polish**: While baseline responsive design and WCAG color contrasts are implemented, further mobile screen refinement and screen reader audits remain future work.
 - **Sample Seed Data**: The sample test accounts and clubs in `database/sample-data.sql` must be purged before deploying the system for actual institutional use.
 - **Email & In-App Notifications (Out of Scope)**: Automatic notifications (e.g., email alerts when a registration is confirmed, when an event is rescheduled, or when a registration is cancelled) are not included in this release. Future phases can integrate Jakarta Mail for SMTP delivery and an `in_app_notifications` table for dashboard alerts.

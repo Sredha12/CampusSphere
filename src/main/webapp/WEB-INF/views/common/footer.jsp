@@ -24,7 +24,6 @@
                         <ul>
                             <li><a href="${pageContext.request.contextPath}/login">Student Login</a></li>
                             <li><a href="${pageContext.request.contextPath}/register">Student Register</a></li>
-                            <li><a href="${pageContext.request.contextPath}/health">System Health</a></li>
                         </ul>
                     </div>
                 </div>
